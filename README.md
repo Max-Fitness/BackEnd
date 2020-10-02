@@ -1,6 +1,6 @@
 # **************** Documentation for Use **************** 
 
-Deployment Base URL: howtobuildweek.herokuapp.com/
+Deployment Base URL: will update as soon as I update this
 
 ## Endpoints
 
