@@ -9,8 +9,13 @@ module.exports = (req, res, next) => {
         res.status(401).json({ error: "You must be logged in to do this" });
       } 
       else {
-        req.jwt = decodedToken;
-        next();
+        if(decodedToken.role >= 2){
+          req.jwt = decodedToken;
+          next();
+        }
+        else{
+          res.status(403).json({error: "This action requires permissions"})
+        }
       }
     });
   } else {

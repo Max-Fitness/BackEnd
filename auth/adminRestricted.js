@@ -10,7 +10,7 @@ module.exports = (req, res, next) => {
         res.status(401).json({ error: "You must be logged in to do this" });
       } 
       else {
-        if(decodedToken.role >= 3){
+        if(decodedToken.role >= 4){
           req.jwt = decodedToken;
           next();
         }
