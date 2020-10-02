@@ -4,9 +4,18 @@ const Groups = require("./groupModel.js");
 const regRestricted = require("../auth/regRestricted");
 const empRestricted = require("../auth/empRestricted");
 const adminRestricted = require("../auth/adminRestricted");
-
+const nodemailer = require("nodemailer");
 const router = express.Router();
 const db = require("../data/dbConfig.js")
+
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: process.env.MAIN_EMAIL,
+        pass: process.env.MAIN_PASSWORD
+    }
+})
+
 
 router.get("/", regRestricted, (req, res)=>{
     Groups.getAllGroups()
@@ -80,6 +89,7 @@ router.put("/join/:id", regRestricted, (req, res)=>{
             const newIds = [];
             const newNames = []
             let addAtEnd = true;
+            let sendSUemail = true;
             for(let i = 0; i < idsString.length; i++){
                 if(parseInt(user.id, 10) != parseInt(idsString[i], 10)){
                     newNames.push(namesString[i]);
@@ -87,6 +97,7 @@ router.put("/join/:id", regRestricted, (req, res)=>{
                 }
                 else{
                     addAtEnd = false;
+                    sendSUemail = false;
                 }
             }
             if(addAtEnd){
@@ -108,7 +119,29 @@ router.put("/join/:id", regRestricted, (req, res)=>{
             }
             Groups.update(req.params.id, newGroup)
             .then(grp=>{
-                res.status(200).json(grp)
+                let mailOptions = {
+                    from: process.env.MAIN_EMAIL,
+                    to: user.email,
+                    subject: "Group Session Signup",
+                    text: `Thank you for signing up for a group session, ${user.fName}!\n\nHere is a brief overview of your session:\n\n\n${grp.title}\n${grp.date} at ${grp.time} EST\n\n${grp.description}\n\nHosted by ${grp.employees}\n\n\n\nCan't wait to see you then!\n\n\n\n\n\nIf you would like to cancel your attendance to the group session, you can do so on the original page you filled out to sign up!` 
+                }
+                if(!sendSUemail){
+                    mailOptions = {
+                        from: process.env.MAIN_EMAIL,
+                        to: user.email,
+                        subject: "Group Session Cancellation",
+                        text: `You have successfully cancelled your spot in the group session, ${user.fName}!\n\nHere is the session you cancelled, just in case it was in error:\n\n\n${grp.title}\n${grp.date} at ${grp.time}EST\n\n${grp.description}\n\nHosted by ${grp.employees}\n\n\n\nCan't wait to see you another time!\n\n\n\n\n\nIf you would like to reschedule your attendance to another group session, you can do so on the original page you filled out to sign up!` 
+                    }
+                }
+                transporter.sendMail(mailOptions, function(error, info){
+                    if(error){
+                        console.log(error)
+                        res.status(500).json({error: "Something went wrong, please try again later!"})
+                    }
+                    else{
+                        res.status(200).json(grp)
+                    }
+                })
             })
             .catch(err=>{
                 res.status(500).json({error: "failed to update group. please try again later"})
@@ -140,7 +173,7 @@ function isValidGroup(group){
 }
 
 function isValidUser(user){
-    return Boolean(user.fName, user.lName, user.id)
+    return Boolean(user.email, user.fName, user.lName, user.id)
 }
 
 module.exports = router;
