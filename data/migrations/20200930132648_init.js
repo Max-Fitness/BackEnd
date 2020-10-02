@@ -8,6 +8,16 @@ exports.up = function(knex) {
         user.string("password").notNullable();
         user.integer("role").notNullable();
     })
+    .createTable("groups", group=>{
+      group.increments();
+      group.string("title").notNullable();
+      group.string("description");
+      group.string("date");
+      group.string("time");
+      group.string("employees");
+      group.string("regNames");
+      group.string("regIds");
+    })
   };
   
   exports.down = function(knex) {
