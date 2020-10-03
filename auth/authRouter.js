@@ -21,7 +21,7 @@ router.post("/register", (req, res)=>{
     const userEmail = credentials.email;
     const userPass = credentials.password;
 
-    if(isValid(credentials) && req.body.role <= 2){
+    if(isValid(credentials)){
         const mailOptions = {
             from: process.env.MAIN_EMAIL,
             to: userEmail,

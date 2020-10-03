@@ -8,7 +8,7 @@ exports.up = function(knex) {
         user.string("password").notNullable();
         user.integer("role").notNullable();
     })
-    .createTable("groups", group=>{
+    .createTable("groupsessions", group=>{
       group.increments();
       group.string("title").notNullable();
       group.string("description");
@@ -21,6 +21,6 @@ exports.up = function(knex) {
   };
   
   exports.down = function(knex) {
-    return knex.schema.dropTableIfExists("users")
+    return knex.schema.dropTableIfExists("users", "groupsessions")
   };
   

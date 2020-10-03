@@ -1,4 +1,4 @@
-const db = require("../data/dbConfig.js");
+const db = require("../knex/knex.js");
 module.exports={
     getAllGroups,
     findGroup,
@@ -8,16 +8,16 @@ module.exports={
 }
 
 function getAllGroups(){
-    return db("groups");
+    return db("groupsessions");
 }
 
 function findGroup(id){
-    return db("groups").where({id}).first();
+    return db("groupsessions").where({id}).first();
 }
 
 async function insert(group){
     try{
-        const [id] = await db("groups").insert(group, "id");
+        const [id] = await db("groupsessions").insert(group, "id");
         
         return findGroup(id);
     }
@@ -27,14 +27,14 @@ async function insert(group){
 }
 
 function update(id, changes) {
-    return db("groups").where({id}).update(changes, "id")
+    return db("groupsessions").where({id}).update(changes, "id")
     .then(updated=>{
-        return db("groups").where({id}).first();
+        return db("groupsessions").where({id}).first();
     })
 }
 
 function remove(id){
-    return db("groups").where({id}).del()
+    return db("groupsessions").where({id}).del()
     .then(res=>{
         return getAllGroups();
     })
