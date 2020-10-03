@@ -1,4 +1,4 @@
-const db = require("../data/dbConfig.js")
+const db = require("../knex/knex.js")
 
 module.exports = {
     getAll,
@@ -35,4 +35,8 @@ function update(id, changes) {
     .then(updated=>{
         return db("users").where({id}).first();
     })
+}
+
+function getEmployees(){
+    return db("users").where({role: 3}).first();
 }

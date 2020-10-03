@@ -5,22 +5,20 @@ const pgConnection = process.env.DATABASE_URL || "postgresql://postgres@localhos
 
 module.exports = {
   development: {
-    client: "sqlite3",
-    useNullAsDefault: true,
+    client: 'pg',
     connection: {
-      filename: "./data/database.db3",
-    },
-    pool: {
-      afterCreate: (conn, done) => {
-        conn.run("PRAGMA foreign_keys = ON", done);
-      },
+      host : '127.0.0.1',
+      user : process.env.POSTGRES_USER,
+      password : process.env.POSTGRES_PW,
+      database : 'maxfitness',
+      charset: 'utf8'
     },
     migrations: {
-      directory: "./data/migrations",
+      directory: __dirname + '/knex/migrations',
     },
     seeds: {
-      directory: "./data/seeds",
-    },
+      directory: __dirname + '/knex/seeds'
+    }
   },
 
   production: {

@@ -6,7 +6,7 @@ const empRestricted = require("../auth/empRestricted");
 const adminRestricted = require("../auth/adminRestricted");
 const nodemailer = require("nodemailer");
 const router = express.Router();
-const db = require("../data/dbConfig.js")
+const db = require("../knex/knex.js")
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
