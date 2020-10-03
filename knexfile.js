@@ -29,10 +29,10 @@ module.exports = {
       max: 10,
     },
     migrations: {
-      directory: "./data/database.db3",
+      directory: __dirname + '/knex/migrations',
     },
     seeds: {
-      directory: "./data/seeds",
+      directory: __dirname + '/knex/seeds'
     },
   },
 };
