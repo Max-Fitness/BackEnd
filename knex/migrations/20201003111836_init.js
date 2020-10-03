@@ -8,19 +8,9 @@ exports.up = function(knex) {
         user.string("password").notNullable();
         user.integer("role").notNullable();
     })
-    .createTable("groupsessions", group=>{
-      group.increments();
-      group.string("title").notNullable();
-      group.string("description");
-      group.string("date");
-      group.string("time");
-      group.string("employees");
-      group.string("regNames");
-      group.string("regIds");
-    })
   };
   
-  exports.down = function(knex) {
-    return knex.schema.dropTableIfExists("users", "groupsessions")
+  exports.down = async function(knex) {
+    await knex.schema.dropTableIfExists("users",)
   };
   
