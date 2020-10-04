@@ -22,7 +22,7 @@ async function insert(group){
         return findGroup(id);
     }
     catch(err){
-        throw error;
+        throw err;
     }
 }
 
